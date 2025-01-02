@@ -1,0 +1,174 @@
+﻿@model List<Models.EntityFramework.DonDangKy>
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+<h1 class="h3 mb-2 text-gray-800">Đơn đăng ký</h1>
+
+<!-- DataTales Example -->
+<div class="card shadow mb-4">
+    <div class="card-header py-3 d-flex justify-content-between">
+        <h6 class="m-0 font-weight-bold text-primary d-flex align-items-center">Thông tin đơn đăng ký</h6>
+        <a class="text-primary" href="#" data-toggle="modal" data-target="#exportModal">
+            Xuất danh sách học viên đã duyệt ra file Excel
+        </a>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                <thead>
+                    <tr>
+                        <th>Mã đơn</th>
+                        <th>Ngày tạo</th>
+                        <th>Trạng thái</th>
+                        <th data-orderable="false">Học viên</th>
+                        <th data-orderable="false">Thao tác</th>
+                    </tr>
+                </thead>
+                <tfoot>
+                    <tr>
+                        <th>Mã đơn</th>
+                        <th>Ngày tạo</th>
+                        <th>Trạng thái</th>
+                        <th>Học viên</th>
+                        <th>Thao tác</th>
+                    </tr>
+                </tfoot>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>@item.MaDONDK</td>
+                            <td>
+                                @item.NgayTaoDONDK.ToString("dd/MM/yyyy hh:mm:ss")
+                            </td>
+                            <td>
+                                @switch (item.TrangThaiDONDK)
+                                {
+                                    case null:
+                                        <span>Đang chờ</span>;
+                                        break;
+                                    case true:
+                                        <span class="text-success">Đã duyệt</span>;
+                                        break;
+                                    case false:
+                                        <span class="text-danger">Không duyệt</span>;
+                                        break;
+                                }
+                            </td>
+                            <td>
+                                <a href="@Url.Action("BelongTo", new { id = item.MaHV })">Chi tiết</a>
+                            </td>
+                            @if (item.TrangThaiDONDK == null)
+                            {
+                                <td>
+                                    <a class="text-primary" href="#" data-toggle="modal" data-target="#denyModal" onclick="setDenyModalId(@item.MaDONDK)">
+                                        Hủy
+                                    </a>
+                                    <span class="text-primary mx-1">|</span>
+                                    <a class="text-primary" href="#" data-toggle="modal" data-target="#acceptModal" onclick="setAcceptModalId(@item.MaDONDK)">
+                                        Duyệt
+                                    </a>
+                                </td>
+                            }
+                            else
+                            {
+                                <td style="vertical-align:middle;">
+                                    <span class="middle-line"></span>
+                                </td>
+                            }
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- Deny Modal-->
+<div class="modal fade" id="denyModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Từ chối duyệt đơn đăng ký?</h5>
+                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">Bạn có chắc chắn với hành động của mình chứ?</div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" type="button" data-dismiss="modal">Hủy</button>
+                @using (Html.BeginForm("Deny", "DonDangKy", FormMethod.Post))
+                {
+                    <input type="hidden" id="denyModalHiddenId" name="id" />
+                    <button type="submit" class="btn btn-primary">Từ chối duyệt</button>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Accept Modal-->
+<div class="modal fade" id="acceptModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Chấp nhận duyệt đơn đăng ký?</h5>
+                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">Bạn có chắc chắn với hành động của mình chứ?</div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" type="button" data-dismiss="modal">Hủy</button>
+                @using (Html.BeginForm("Accept", "DonDangKy", FormMethod.Post))
+                {
+                    <input type="hidden" id="acceptModalHiddenId" name="id" />
+                    <button type="submit" class="btn btn-primary">Chấp nhận duyệt</button>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Export Modal-->
+<div class="modal fade" id="exportModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Xuất danh sách ra file Excel</h5>
+                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            @using (Html.BeginForm("Export", "DonDangKy", FormMethod.Get, new { @id = "exportForm" }))
+            {
+                <div class="modal-body">
+                    <input type="text" class="form-control" id="fileName" name="fileName" placeholder="Nhập tên file (có thể để trống)">
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Hủy</button>
+                    <button type="submit" id="exportBtn" class="btn btn-primary">Xuất file</button>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+@section Script{
+    <script>
+        function setDenyModalId(id) {
+            document.getElementById('denyModalHiddenId').value = id;
+        }
+        function setAcceptModalId(id) {
+            document.getElementById('acceptModalHiddenId').value = id;
+        }
+        $("#exportForm").on("submit", function (e) {
+            $('#exportModal').modal('hide');
+        });
+    </script>
+}

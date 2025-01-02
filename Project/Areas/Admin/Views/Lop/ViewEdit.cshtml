@@ -1,0 +1,98 @@
+﻿@model Project.Areas.Admin.Models.LopModel
+@{
+    ViewBag.Title = "ViewEdit";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+
+@section Style{
+    <style>
+        .table td, .table th {
+            padding: .35rem 0;
+        }
+    </style>
+}
+
+<h1 class="h3 mb-2 text-gray-800">Lớp học</h1>
+
+<!-- DataTales Example -->
+<div class="card shadow mb-4">
+    <div class="card-header py-3 d-flex justify-content-between">
+        <h6 class="m-0 font-weight-bold text-primary d-flex align-items-center">Chỉnh sửa lớp học</h6>
+        <a class="text-primary" href="@Url.Action("Index")">
+            Quay lại
+        </a>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            @using (Html.BeginForm("Edit", "Lop", FormMethod.Post))
+            {
+                if (Request.HttpMethod == "POST")
+                {
+                    @Html.ValidationSummary(false, null, new { @class = "alert alert-danger" })
+                }
+            <table class="table table-borderless" width="100%" cellspacing="0">
+                <tr>
+                    <td><label for="tenLop">Mã lớp:</label></td>
+                    <td>
+                        @Html.TextBoxFor(model => model.id, new { @readonly = "readonly", @class = "form-control", @id = "tenLop" })
+                    </td>
+                </tr>
+                <tr>
+                    <td><label for="tenLop">Tên lớp:</label></td>
+                    <td>
+                        @Html.TextBoxFor(model => model.tenLop, new { @class = "form-control", @id = "tenLop" })
+                    </td>
+                </tr>
+                <tr>
+                    <td><label for="maxHocVien">Số học viên tối đa:</label></td>
+                    <td>
+                        @Html.TextBoxFor(model => model.maxHocVien, new { @type = "number", @class = "form-control", @id = "maxHocVien" })
+                    </td>
+                </tr>
+                <tr>
+                    <td><label for="thu">Thứ trong tuần:</label></td>
+                    <td>
+                        @Html.DropDownListFor(model => model.thu, new SelectList(new List<SelectListItem> {
+                            new SelectListItem { Value = "", Text = "Chọn thứ", Disabled = true },
+                            new SelectListItem { Value = "Thứ Hai", Text = "Thứ Hai" },
+                            new SelectListItem { Value = "Thứ Ba", Text = "Thứ Ba" },
+                            new SelectListItem { Value = "Thứ Tư", Text = "Thứ Tư" },
+                            new SelectListItem { Value = "Thứ Năm", Text = "Thứ Năm" },
+                            new SelectListItem { Value = "Thứ Sáu", Text = "Thứ Sáu" },
+                            new SelectListItem { Value = "Thứ Bảy", Text = "Thứ Bảy" },
+                            new SelectListItem { Value = "Chủ Nhật", Text = "Chủ Nhật" }
+                        }, "Value", "Text", Model.thu), new { @class = "form-control", @id = "thu" })
+                    </td>
+                </tr>
+                <tr>
+                    <td><label for="soBuoi">Số buổi học:</label></td>
+                    <td>
+                        @Html.TextBoxFor(model => model.soBuoi, new { @type = "number", @min = "20", @class = "form-control", @id = "soBuoi" })
+                    </td>
+                </tr>
+                <tr>
+                    <td><label for="ngayBatDau">Ngày bắt đầu:</label></td>
+                    <td>
+                        @Html.TextBoxFor(model => model.ngayStart, string.Format("{0:yyyy-MM-dd}", Model.ngayStart), new { @type = "date", @class = "form-control", @id = "ngayBatDau" })
+                    </td>
+                </tr>
+                <tr>
+                    <td><label for="bacDaoTao">Bậc đào tạo:</label></td>
+                    <td>
+                        @Html.DropDownListFor(model => model.bac, new SelectList(new List<SelectListItem> {
+                            new SelectListItem { Value = "", Text = "Chọn bậc đào tạo", Disabled = true },
+                            new SelectListItem { Value = "Cử nhân", Text = "Cử nhân" },
+                            new SelectListItem { Value = "Thạc sĩ", Text = "Thạc sĩ" },
+                            new SelectListItem { Value = "Tiến sĩ", Text = "Tiến sĩ" }
+                        }, "Value", "Text", Model.bac), new { @class = "form-control", @id = "bacDaoTao" })
+                    </td>
+                </tr>
+            </table>
+                <div class="text-right">
+                    <button type="submit" class="btn btn-primary">Chỉnh sửa</button>
+                </div>
+            }
+        </div>
+    </div>
+</div>

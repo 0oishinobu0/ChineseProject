@@ -1,0 +1,60 @@
+﻿.validation-summary-errors ul:last-child {
+    margin-bottom: 0;
+}
+
+.middle-line {
+    background-color: lightgray;
+    display: block;
+    height: 2px;
+}
+
+#alertBox {
+    position: absolute;
+    right: 24px;
+    top: 78px;
+    z-index: 10;
+    display: flex;
+    gap: 80px;
+    opacity: 0;
+}
+
+    #alertBox.showAlertOpacity {
+        opacity: 1;
+    }
+
+    #alertBox.showAlert {
+        animation: show_slide 1s ease forwards;
+    }
+
+    #alertBox.hideAlert {
+        animation: hide_slide 1s ease forwards;
+    }
+
+@keyframes show_slide {
+    0% {
+        transform: translateX(110%);
+    }
+
+    50% {
+        transform: translateX(-10%);
+    }
+
+    100% {
+        transform: translateX(0%);
+    }
+}
+
+
+@keyframes hide_slide {
+    0% {
+        transform: translateX(0%);
+    }
+
+    50% {
+        transform: translateX(-10%);
+    }
+
+    100% {
+        transform: translateX(110%);
+    }
+}

@@ -1,0 +1,55 @@
+﻿@model List<Models.EntityFramework.HocVien>
+@{
+    ViewBag.Title = "Including";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+<h1 class="h3 mb-2 text-gray-800">Lớp học</h1>
+
+<!-- DataTales Example -->
+<div class="card shadow mb-4">
+    <div class="card-header py-3 d-flex justify-content-between">
+        <h6 class="m-0 font-weight-bold text-primary d-flex align-items-center">Lớp học bao gồm học viên</h6>
+        <a class="text-primary" href="@Url.Action("Index")">
+            Quay lại
+        </a>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                <thead>
+                    <tr>
+                        <th>Mã học viên</th>
+                        <th>Họ tên</th>
+                        <th>Số điện thoại</th>
+                        <th>Email</th>
+                        <th>Cơ sở</th>
+                    </tr>
+                </thead>
+                <tfoot>
+                    <tr>
+                        <th>Mã học viên</th>
+                        <th>Họ tên</th>
+                        <th>Số điện thoại</th>
+                        <th>Email</th>
+                        <th>Cơ sở</th>
+                    </tr>
+                </tfoot>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>@item.MaHV</td>
+                            <td>@item.TenHV</td>
+                            <td>@item.SoDienThoaiHV</td>
+                            <td>@item.EmailHV</td>
+                            <td>@item.CoSoHV</td>
+                        </tr>
+                    }
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+

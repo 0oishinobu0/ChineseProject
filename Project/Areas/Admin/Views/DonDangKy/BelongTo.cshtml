@@ -1,0 +1,71 @@
+﻿@model Models.EntityFramework.HocVien
+@{
+    ViewBag.Title = "BelongTo";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+<h1 class="h3 mb-2 text-gray-800">Đơn đăng ký</h1>
+
+
+<!-- DataTales Example -->
+<div class="card shadow mb-4">
+    <div class="card-header py-3 d-flex justify-content-between">
+        <h6 class="m-0 font-weight-bold text-primary d-flex align-items-center">Thông tin học viên</h6>
+        <a class="text-primary" href="@Url.Action("Index")">
+            Quay lại
+        </a>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                <thead>
+                    <tr>
+                        <th>Mã học viên</th>
+                        <th>Họ tên</th>
+                        <th>Số điện thoại</th>
+                        <th>Email</th>
+                        <th>Cơ sở</th>
+                        <th>Hỗ trợ</th>
+                        <th>Trạng thái</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>@Model.MaHV</td>
+                        <td>@Model.TenHV</td>
+                        <td>@Model.SoDienThoaiHV</td>
+                        <td>@Model.EmailHV</td>
+                        <td>@Model.CoSoHV</td>
+                        @if (Model.HoTroHV == null)
+                        {
+                            <td style="vertical-align:middle;">
+                                <span class="middle-line"></span>
+                            </td>
+                        }
+                        else
+                        {
+                            <td>@Model.HoTroHV</td>
+                        }
+                        <td>
+                            <span class="@(Model.TrangThaiHV == "Đã duyệt" ? "text-success" : Model.TrangThaiHV == "Không duyệt" ? "text-danger" : "")">
+                                @Model.TrangThaiHV
+                            </span>
+                        </td>
+                    </tr>
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+@section Script{
+    <script>
+        $('#dataTable').DataTable({
+            info: false,
+            ordering: false,
+            paging: false,
+            searching: false
+        });
+    </script>
+}

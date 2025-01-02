@@ -1,0 +1,72 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap"
+          rel="stylesheet" />
+    <link rel="stylesheet" href="~/Assets/User/css/style.css" />
+</head>
+<body>
+    <header>
+        <div class="container-header">
+            <div class="header-logo">
+                <img class="header-logo-image" src="~/Assets/User/image/logo.png" alt="image" />
+            </div>
+            <a class="header-button" type="button" href="/Admin/DangNhap">
+                Đăng nhập
+            </a>
+            <ul class="header-links">
+                <li><a class="header-links-link" href="@Url.Action("Index", "TrangChu")">Trang chủ</a></li>
+                <li><a class="header-links-link" href="#">Lộ trình học</a></li>
+                <li><a class="header-links-link" href="#">Ưu đãi</a></li>
+                <li>
+                    <a class="header-links-link" href="@Url.Action("Index", "KhaiGiang")">Lịch khai giảng</a>
+                </li>
+            </ul>
+        </div>
+    </header>
+    <main>
+        @RenderBody()
+    </main>
+    <footer>
+        <div class="container-footer">
+            <div class="footer-container">
+                <img class="footer-logo" src="/Assets/User/image/logo.png" alt="image" />
+                <p class="footer-info">
+                    Văn phòng công ty: Số 258 đường Bạch Đằng, phường Nam Khê, thành phố
+                    Uông Bí, tỉnh Quảng Ninh<br />
+                    Hotline 0985.863.555 - 0349.464.635<br />
+                    Website: <br />
+                    Fanpage: <br />
+                </p>
+            </div>
+        </div>
+    </footer>
+    <script src="~/Assets/Admin/vendor/jquery/jquery.min.js"></script>
+    <script src="~/Assets/Admin/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Core plugin JavaScript-->
+    <script src="~/Assets/Admin/vendor/jquery-easing/jquery.easing.min.js"></script>
+
+    <!-- Custom scripts for all pages-->
+    <script src="~/Assets/Admin/js/sb-admin-2.min.js"></script>
+
+    <!-- Page level plugins -->
+    <script src="~/Assets/Admin/vendor/datatables/jquery.dataTables.min.js"></script>
+    <script src="~/Assets/Admin/vendor/datatables/dataTables.bootstrap4.min.js"></script>
+
+    <!-- Page level custom scripts -->
+    <script src="~/Assets/Admin/js/demo/datatables-demo.js"></script>
+    @RenderSection("UserScript", required: false)
+</body>
+
+</html>
+

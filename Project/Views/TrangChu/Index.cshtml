@@ -1,0 +1,295 @@
+﻿@model Project.Models.HocVienModel
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="main-general" style="background-image: url(/Assets/User/image/background_general.jpg);">
+    <div class="main-general-info">
+        <p class="main-general-info-text">
+            học tiếng trung chuẩn với đơn vị độc quyền kỳ thi hsk toàn cầu
+        </p>
+        <ul class="main-general-info-list">
+            <li>Sở hữu ngay 1 suất thi HSK trên toàn quốc</li>
+            <li>Nhận ngay thư giới thiệu du học từ điểm thi HSK</li>
+            <li>Đầu ra khóa học theo khung HSK chuẩn CTI</li>
+            <li>Nhận thư giới thiệu du học Trung Quốc từ Phó Giáo sư</li>
+        </ul>
+        <img class="main-general-info-image"
+             src="~/Assets/User/image/people_general.png"
+             alt="image" />
+    </div>
+
+    @using (Html.BeginForm("Create", "TrangChu", FormMethod.Post, new { @class = "main-general-form", @id = "thisForm" }))
+    {
+
+        <span class="main-general-form-text">hỗ trợ học phí lên tới 50%</span>
+        if (Request.HttpMethod == "POST")
+        {
+            @Html.ValidationSummary(false, null, new { @class = "main-general-form-error" })
+        }
+
+        if (TempData["DangKy"] != null)
+        {
+            <div id="dangKyAlert" style="background-color: #cff2cd; color: #0b9f1c; padding: 20px; border-radius: 6px; display: none;">
+                @TempData["DangKy"]
+            </div>
+        }
+
+        @Html.TextBoxFor(model => model.ten, new
+        {
+            @class = "main-general-form-input",
+               @id = "txtTen",
+               @placeholder = "Họ tên"
+        })
+
+        @Html.TextBoxFor(model => model.soDienThoai, new
+   {
+       @class = "main-general-form-input",
+       @id = "txtSdt",
+       @placeholder = "Số điện thoại",
+       @pattern = @"\d{10}",
+   })
+
+        @Html.TextBoxFor(model => model.email, new
+        {
+            @class = "main-general-form-input",
+            @id = "txtEmail",
+            @placeholder = "Email",
+            @type = "email"
+        })
+
+        @Html.DropDownListFor(
+    model => model.coSo,
+    new SelectList(
+        new List<SelectListItem>
+        {
+            new SelectListItem { Value = "", Text = "Chọn cơ sở gần bạn", Selected = true, Disabled = true },
+            new SelectListItem { Value = "Cơ sở 1 - Nam Khê, Uông Bí", Text = "Cơ sở 1 - Nam Khê, Uông Bí" },
+            new SelectListItem { Value = "Cơ sở 2 - Hồng Hải, Hạ Long", Text = "Cơ sở 2 - Hồng Hải, Hạ Long" },
+            new SelectListItem { Value = "Trực tuyến", Text = "Trực tuyến" }
+        },
+        "Value", "Text"
+    ),
+    new { @class = "main-general-form-input", @id = "optCoso" }
+)
+
+        @Html.TextAreaFor(model => model.hoTro, new
+        {
+            @class = "main-general-form-input",
+            @id = "txtHoTro",
+            @placeholder = "Bạn đang cần hỗ trợ điều gì?",
+            @style = "resize: none; height: 100px;"
+        })
+        <button class="main-general-form-button" type="submit">
+            Đăng ký ngay
+        </button>
+    }
+</div>
+<div class="main-info">
+    <div class="main-info-timer">
+        <div class="main-info-timer-gif">
+            <img src="~/Assets/User/image/download.gif" alt="gif" />
+        </div>
+        <span class="main-info-timer-info">cơ hội nhận học bổng toàn phần tiếng trung tại cti hsk</span>
+    </div>
+    <div class="main-info-info">
+        <img class="main-info-info-image"
+             src="~/Assets/User/image/girl_point.png"
+             alt="image" />
+        <span class="main-info-info-span">học tiếng trung tại cti hsk có gì khác biệt</span>
+        <ul class="main-info-info-list">
+            <li>CSVC hiện đại với tiêu chuẩn 15 học viên/ lớp</li>
+            <li>Chương trình học/Lộ trình học theo khung HSK chuẩn theo CTI</li>
+            <li>Đội ngũ giảng viên Hán ngữ đạt chuẩn CTI</li>
+            <li>
+                Đơn vị đào tạo và luyện thi HSK ngắn hạn chính thống ĐẦU TIÊN tại
+                Việt Nam được công nhận và bảo trợ chất lượng đào tạo bởi CTI -
+                Đơn vị sở hữu và vận hành mọi kỳ thi HSK trên toàn thế giới.
+            </li>
+        </ul>
+    </div>
+</div>
+<div class="main-roadmap">
+    <div class="main-roadmap-gift">
+        <div class="main-roadmap-gift-text">
+            <span>tặng 1 suất thi và lệ phí thi hsk</span>
+            <span>cho học viên đăng ký trong tháng 07</span>
+        </div>
+        <a class="main-roadmap-gift-button" href="#thisForm">
+            Đăng ký ngay
+        </a>
+    </div>
+</div>
+<div class="main-sale">
+    <div class="main-sale-head">
+        <svg xmlns="http://www.w3.org/2000/svg"
+             preserveAspectRatio="none"
+             viewBox="0 0 206.39 187.07"
+             class="main-sale-head-svg"
+             fill="green">
+            <path d="M205,93.53A86.21,86.21,0,0,1,196.91,130c-4,8.72,14.66,37.45,8.06,44.59s-38.49-7.34-47.13-2.26a109.26,109.26,0,0,1-55.35,14.79C45.89,187.07,0,145.2,0,93.53S45.89,0,102.49,0,205,41.88,205,93.53Z"></path>
+        </svg>
+        <span class="main-sale-head-span">ưu đãi học phí</span>
+    </div>
+    <div class="main-sale-man">
+        <img class="main-sale-man-image" src="~/Assets/User/image/boy.png" alt="image" />
+        <div class="main-sale-man-shape1"></div>
+        <div class="main-sale-man-shape2"></div>
+    </div>
+    <div class="main-sale-info">
+        <span class="main-sale-info-intro">
+            Cơ hội nhận học bổng TOÀN PHẦN tiếng Trung tại CTI HSK cho 3 bạn
+            đăng ký khóa học sớm nhất
+        </span>
+        <ul class="main-sale-info-list">
+            <li>
+                Ưu đãi 50% khi đăng ký từ 3 khóa học trở lên trị giá tới 10 triệu
+                đồng
+            </li>
+            <li>Ưu đãi 10% khi đăng ký khóa lẻ trị giá 1 triệu đồng</li>
+            <li>Miễn phí giáo trình bản quyền chuẩn CTI</li>
+            <li>Tặng khóa học "tiếng Trung Gen Z, giao tiếp trendy"</li>
+        </ul>
+    </div>
+</div>
+<div class="main-qr">
+    <span class="main-qr-text">Quét mã nhận lịch khai giảng tháng 7 cực nhiều ưu đãi</span>
+    <button class="main-qr-button"
+            type="button"
+            popovertarget="main-schedule">
+        Lịch khai giảng
+    </button>
+    <img class="main-qr-image" src="~/Assets/User/image/LịchHSK.png" alt="image" />
+    <img id="main-schedule" src="~/Assets/User/image/lich.png" alt="image" popover />
+</div>
+<div class="main-feedback">
+    <div class="main-feedback-container">
+        <span class="main-feedback-text">khách hàng nói gì về Trung tâm hsk</span>
+        <div class="main-feedback-card">
+            <span class="main-feedback-card-person">Chị Hoa, mẹ của Minh Anh (lớp 10, HSK 4)</span>
+            <p class="main-feedback-card-text">
+                Tôi rất hài lòng với chất lượng giảng dạy tại CTI HSK. Đội ngũ
+                giáo viên tận tâm và chuyên nghiệp đã giúp con tôi tiến bộ vượt
+                bậc trong thời gian ngắn.
+            </p>
+        </div>
+        <div class="main-feedback-card">
+            <span class="main-feedback-card-person">Anh Nam (nhân viên XNK, HSK5)</span>
+            <p class="main-feedback-card-text">
+                Từ khi học tại CTI HSK, tiếng Trung của tôi cải thiện đáng kể. Nhờ
+                phương pháp giảng dạy dễ hiểu của các giáo viên và chương trình
+                học chất lượng...
+            </p>
+        </div>
+        <div class="main-feedback-card">
+            <span class="main-feedback-card-person">Ngọc Lan (sinh viên năm 3, HSK6)</span>
+            <p class="main-feedback-card-text">
+                Học tại CTI HSK giúp mình nâng cao trình độ tiếng Trung nhanh
+                chóng. Giáo viên nhiệt tình, phương pháp hiệu quả. Nhờ CTI HSK,
+                mình tự tin đạt kết quả cao trong kỳ thi HSK 9 sắp tới.
+            </p>
+        </div>
+        <svg xmlns="http://www.w3.org/2000/svg"
+             class="main-feedback-svg"
+             preserveAspectRatio="none"
+             viewBox="0 0 129.34 107.78"
+             fill='url("#SHAPE28_desktop_gradient")'>
+            <defs id="SHAPE28_defs">
+                <linearGradient id="SHAPE28_desktop_gradient"
+                                gradientTransform="rotate(90)">
+                    <stop offset="0%" stop-color="rgba(236, 244, 255, 0.1)"></stop>
+                    <stop offset="100%" stop-color="rgb(105, 185, 255)"></stop>
+                </linearGradient>
+            </defs>
+            <polygon points="0 107.78 0 50.18 24.87 0 55.85 0 35.35 48.44 36.66 50.18 56.73 50.18 56.73 107.78 0 107.78"></polygon>
+            <polygon points="72.61 107.78 72.61 50.18 97.48 0 128.47 0 107.96 48.44 109.27 50.18 129.34 50.18 129.34 107.78 72.61 107.78"></polygon>
+        </svg>
+        <img class="main-feedback-star" src="~/Assets/User/image/star.gif" alt="gif" />
+    </div>
+</div>
+<div class="main-anotherform">
+    @using (Html.BeginForm("Create", "TrangChu", FormMethod.Post, new { @class = "main-anotherform-form" }))
+    {
+        <span class="main-general-form-text">hỗ trợ học phí lên tới 50%</span>
+        <div class="main-anotherform-form-student">
+            <img class="main-anotherform-form-student-image"
+                 src="~/Assets/User/image/group_student.png"
+                 alt="image" />
+            <div class="main-anotherform-form-student-shape1"></div>
+            <div class="main-anotherform-form-student-shape2"></div>
+        </div>
+        <div class="main-anotherform-form-realform">
+
+            @if (Request.HttpMethod == "POST")
+            {
+                @Html.ValidationSummary(false, null, new { @class = "main-general-form-error" })
+            }
+            @Html.TextBoxFor(model => model.ten, new
+            {
+                @class = "main-general-form-input",
+                   @id = "txtTen",
+                   @placeholder = "Họ tên"
+            })
+
+            @Html.TextBoxFor(model => model.soDienThoai, new
+       {
+           @class = "main-general-form-input",
+           @id = "txtSdt",
+           @placeholder = "Số điện thoại",
+           @pattern = @"\d{10}",
+       })
+
+            @Html.TextBoxFor(model => model.email, new
+       {
+           @class = "main-general-form-input",
+           @id = "txtEmail",
+           @placeholder = "Email",
+           @type = "email"
+       })
+
+            @Html.DropDownListFor(
+        model => model.coSo,
+        new SelectList(
+            new List<SelectListItem>
+            {
+                new SelectListItem { Value = "", Text = "Chọn cơ sở gần bạn", Selected = true, Disabled = true },
+                new SelectListItem { Value = "Cơ sở 1 - Nam Khê, Uông Bí", Text = "Cơ sở 1 - Nam Khê, Uông Bí" },
+                new SelectListItem { Value = "Cơ sở 2 - Hồng Hải, Hạ Long", Text = "Cơ sở 2 - Hồng Hải, Hạ Long" },
+                new SelectListItem { Value = "Trực tuyến", Text = "Trực tuyến" }
+            },
+            "Value", "Text"
+        ),
+        new { @class = "main-general-form-input", @id = "optCoso" }
+    )
+
+            @Html.TextAreaFor(model => model.hoTro, new
+            {
+                @class = "main-general-form-input",
+                @id = "txtHoTro",
+                @placeholder = "Bạn đang cần hỗ trợ điều gì?",
+                @style = "resize: none; height: 100px;"
+            })
+            <button class="main-anotherform-form-button" type="submit">
+                Đăng ký ngay
+            </button>
+        </div>
+    }
+
+</div>
+<div class="main-coop">
+    <span class="main-coop-text">đối tác đồng hành</span>
+    <img class="main-coop-image1" src="~/Assets/User/image/coop1.jpg" alt="image" />
+    <img class="main-coop-image2" src="~/Assets/User/image/coop2.jpg" alt="image" />
+</div>
+
+@section UserScript{
+    <script>
+        $(function () {
+            $('#dangKyAlert').css('display', 'initial');
+            setTimeout(function () {
+                $('#dangKyAlert').css('display', 'none');
+            }, 5000);
+        });
+    </script>
+}

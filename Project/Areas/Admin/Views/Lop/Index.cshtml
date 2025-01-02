@@ -1,0 +1,112 @@
+﻿@model List<Models.EntityFramework.Lop>
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+<h1 class="h3 mb-2 text-gray-800">Lớp học</h1>
+
+<!-- DataTales Example -->
+<div class="card shadow mb-4">
+    <div class="card-header py-3 d-flex justify-content-between">
+        <h6 class="m-0 font-weight-bold text-primary d-flex align-items-center">Thông tin lớp học</h6>
+        <a class="text-primary" href="@Url.Action("ViewAdd")">
+            Thêm mới lớp
+        </a>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                <thead>
+                    <tr>
+                        <th>Mã lớp</th>
+                        <th>Tên lớp</th>
+                        <th>Số học viên tối đa</th>
+                        <th>Thứ</th>
+                        <th>Số buổi</th>
+                        <th>Ngày bắt đầu</th>
+                        <th>Ngày kết thúc</th>
+                        <th>Bậc đào tạo</th>
+                        <th data-orderable="false">Gồm học viên</th>
+                        <th data-orderable="false">Thao tác</th>
+                    </tr>
+                </thead>
+                <tfoot>
+                    <tr>
+                        <th>Mã lớp</th>
+                        <th>Tên lớp</th>
+                        <th>Số học viên tối đa</th>
+                        <th>Thứ</th>
+                        <th>Số buổi</th>
+                        <th>Ngày bắt đầu</th>
+                        <th>Ngày kết thúc</th>
+                        <th>Bậc đào tạo</th>
+                        <th>Gồm học viên</th>
+                        <th>Thao tác</th>
+                    </tr>
+                </tfoot>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>@item.MaLOP</td>
+                            <td>@item.TenLOP</td>
+                            <td>@item.MaxHocVienLOP</td>
+                            <td>@item.ThuLOP</td>
+                            <td>@item.SoBuoiLOP</td>
+                            <td>@item.NgayStartLOP.ToString("dd/MM/yyyy")</td>
+                            <td>@item.NgayStartLOP.AddDays(item.SoBuoiLOP * 7).ToString("dd/MM/yyyy")</td>
+                            <td>@item.BacLOP</td>
+                            <td>
+                                <a class="text-primary" href="@Url.Action("Including", new { id = item.MaLOP })">
+                                    Chi tiết
+                                </a>
+                            </td>
+                            <td>
+                                <a class="text-primary" href="@Url.Action("ViewEdit", new { id = item.MaLOP })">
+                                    Sửa
+                                </a>
+                                <span class="text-primary mx-1">|</span>
+                                <a class="text-primary" href="#" data-toggle="modal" data-target="#deleteModal" onclick="setDeleteModalId(@item.MaLOP)">
+                                    Xóa
+                                </a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- Delete Modal-->
+<div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Xóa lớp học?</h5>
+                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">Bạn có chắc chắn với hành động của mình chứ?</div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" type="button" data-dismiss="modal">Hủy</button>
+                @using (Html.BeginForm("Delete", "Lop", FormMethod.Post))
+                {
+                    <input type="hidden" id="deleteModalHiddenId" name="id" />
+                    <button type="submit" class="btn btn-primary">Xóa lớp</button>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Script{
+    <script>
+        function setDeleteModalId(id) {
+            document.getElementById('deleteModalHiddenId').value = id;
+        }
+    </script>
+}

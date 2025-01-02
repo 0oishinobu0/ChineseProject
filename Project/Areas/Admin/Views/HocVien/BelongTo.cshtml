@@ -1,0 +1,72 @@
+﻿@model List<Models.EntityFramework.Lop>
+@{
+    ViewBag.Title = "BelongTo";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+<h1 class="h3 mb-2 text-gray-800">Học viên</h1>
+
+<!-- DataTales Example -->
+<div class="card shadow mb-4">
+    <div class="card-header py-3 d-flex justify-content-between">
+        <h6 class="m-0 font-weight-bold text-primary d-flex align-items-center">Học viên thuộc lớp học</h6>
+        <a class="text-primary" href="@Url.Action("Index")">
+            Quay lại
+        </a>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                <thead>
+                    <tr>
+                        <th>Mã lớp</th>
+                        <th>Tên lớp</th>
+                        <th>Số học viên tối đa</th>
+                        <th>Thứ</th>
+                        <th>Số buổi</th>
+                        <th>Ngày bắt đầu</th>
+                        <th>Ngày kết thúc</th>
+                        <th>Bậc đào tạo</th>
+                        <th data-orderable="false">Thao tác</th>
+                    </tr>
+                </thead>
+                <tfoot>
+                    <tr>
+                        <th>Mã lớp</th>
+                        <th>Tên lớp</th>
+                        <th>Số học viên tối đa</th>
+                        <th>Thứ</th>
+                        <th>Số buổi</th>
+                        <th>Ngày bắt đầu</th>
+                        <th>Ngày kết thúc</th>
+                        <th>Bậc đào tạo</th>
+                        <th>Thao tác</th>
+                    </tr>
+                </tfoot>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>@item.MaLOP</td>
+                            <td>@item.TenLOP</td>
+                            <td>@item.MaxHocVienLOP</td>
+                            <td>@item.ThuLOP</td>
+                            <td>@item.SoBuoiLOP</td>
+                            <td>@item.NgayStartLOP.ToString("dd/MM/yyyy")</td>
+                            <td>@item.NgayStartLOP.AddDays(item.SoBuoiLOP * 7).ToString("dd/MM/yyyy")</td>
+                            <td>@item.BacLOP</td>
+                            <td>
+                                <a class="text-primary" href="@Url.Action("ViewChange", new { idHv = Request.RequestContext.RouteData.Values["id"], idLopCu = item.MaLOP })">
+                                    Đổi lớp
+                                </a>
+
+                            </td>
+                        </tr>
+                    }
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+

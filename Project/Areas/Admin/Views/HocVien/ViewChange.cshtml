@@ -1,0 +1,115 @@
+﻿@model List<Models.EntityFramework.Lop>
+@{
+    ViewBag.Title = "ViewChange";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+<h1 class="h3 mb-2 text-gray-800">Học viên</h1>
+
+<!-- DataTales Example -->
+<div class="card shadow mb-4">
+    <div class="card-header py-3 d-flex justify-content-between">
+        <h6 class="m-0 font-weight-bold text-primary d-flex align-items-center">Đổi lớp cho học viên</h6>
+        <a class="text-primary" href="@Url.Action("BelongTo", new { id = Request.QueryString["idHv"] ?? Request.Form["idHv"] })">
+            Quay lại
+        </a>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            @if (Request.HttpMethod == "POST")
+            {
+                @Html.ValidationSummary(false, null, new { @class = "alert alert-danger" })
+            }
+            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                <thead>
+                    <tr>
+                        <th>Mã lớp</th>
+                        <th>Tên lớp</th>
+                        <th>Số học viên tối đa</th>
+                        <th>Thứ</th>
+                        <th>Số buổi</th>
+                        <th>Ngày bắt đầu</th>
+                        <th>Ngày kết thúc</th>
+                        <th>Bậc đào tạo</th>
+                        <th data-orderable="false">Thao tác</th>
+                    </tr>
+                </thead>
+                <tfoot>
+                    <tr>
+                        <th>Mã lớp</th>
+                        <th>Tên lớp</th>
+                        <th>Số học viên tối đa</th>
+                        <th>Thứ</th>
+                        <th>Số buổi</th>
+                        <th>Ngày bắt đầu</th>
+                        <th>Ngày kết thúc</th>
+                        <th>Bậc đào tạo</th>
+                        <th>Thao tác</th>
+                    </tr>
+                </tfoot>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>@item.MaLOP</td>
+                            <td>@item.TenLOP</td>
+                            <td>@item.MaxHocVienLOP</td>
+                            <td>@item.ThuLOP</td>
+                            <td>@item.SoBuoiLOP</td>
+                            <td>@item.NgayStartLOP.ToString("dd/MM/yyyy")</td>
+                            <td>@item.NgayStartLOP.AddDays(item.SoBuoiLOP * 7).ToString("dd/MM/yyyy")</td>
+                            <td>@item.BacLOP</td>
+                            @if (item.MaChiTietLOP == null)
+                            {
+                                <td>
+                                    <a class="text-primary" href="#" data-toggle="modal" data-target="#changeModal" onclick="setChangeModalId(@item.MaLOP)">
+                                        Đổi lớp
+                                    </a>
+                                </td>
+                            }
+                            else
+                            {
+                                <td style="vertical-align:middle;">
+                                    <span class="middle-line"></span>
+                                </td>
+                            }
+
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- Change Modal-->
+<div class="modal fade" id="changeModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Chuyển học viên sang lớp này?</h5>
+                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">Bạn có chắc chắn với hành động của mình chứ?</div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" type="button" data-dismiss="modal">Hủy</button>
+                @using (Html.BeginForm("Change", "HocVien", FormMethod.Post))
+                {
+                    @Html.Hidden("idHv", Request.RequestContext.RouteData.Values["idHv"])
+                    @Html.Hidden("idLopCu", Request.RequestContext.RouteData.Values["idLopCu"])
+                    <input type="hidden" id="changeModalHiddenId" name="idLopMoi" />
+                    <button type="submit" class="btn btn-primary">Chuyển</button>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+@section Script{
+    <script>
+        function setChangeModalId(id) {
+            document.getElementById('changeModalHiddenId').value = id;
+        }
+    </script>
+}
