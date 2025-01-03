@@ -10,12 +10,36 @@
 <div class="card shadow mb-4">
     <div class="card-header py-3 d-flex justify-content-between">
         <h6 class="m-0 font-weight-bold text-primary d-flex align-items-center">Thông tin đơn đăng ký</h6>
-        <a class="text-primary" href="#" data-toggle="modal" data-target="#exportModal">
-            Xuất danh sách học viên đã duyệt ra file Excel
+        <a class="text-primary" href="#" data-toggle="modal" data-target="#exportModal" onclick="setExportModalDate()">
+            Xuất file
         </a>
     </div>
     <div class="card-body">
         <div class="table-responsive">
+            <table class="table table-borderless" width="100%" cellspacing="0">
+                <tbody>
+                    <tr>
+                        <td class="p-0 pr-2">Từ ngày:</td>
+                        <td class="p-0 pl-2">Đến ngày:</td>
+                    </tr>
+                    <tr>
+                        <td class="pl-0 pr-2 pt-1 pb-2">
+                            <input class="form-control form-control-sm" type="date" id="startDate">
+                        </td>
+                        <td class="pr-0 pl-2 pt-1 pb-2">
+                            <input class="form-control form-control-sm" type="date" id="endDate">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="2" class="p-0">
+                            <div class="d-flex justify-content-between">
+                                <span class="text-gray-500"><sup style="font-size: 15px;">*</sup> Xuất danh sách học viên đã duyệt theo khoảng thời gian ra file Excel (mặc định là toàn bộ)</span>
+                                <button type="button" class="btn btn-link" onclick="setEmptyDate()">Dọn dẹp</button>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
             <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                 <thead>
                     <tr>
@@ -40,7 +64,7 @@
                     {
                         <tr>
                             <td>@item.MaDONDK</td>
-                            <td>
+                            <td data-date="@item.NgayTaoDONDK">
                                 @item.NgayTaoDONDK.ToString("dd/MM/yyyy hh:mm:ss")
                             </td>
                             <td>
@@ -151,6 +175,8 @@
                     <input type="text" class="form-control" id="fileName" name="fileName" placeholder="Nhập tên file (có thể để trống)">
                 </div>
                 <div class="modal-footer">
+                    <input type="hidden" id="startDateHidden" name="startDate" />
+                    <input type="hidden" id="endDateHidden" name="endDate" />
                     <button class="btn btn-secondary" type="button" data-dismiss="modal">Hủy</button>
                     <button type="submit" id="exportBtn" class="btn btn-primary">Xuất file</button>
                 </div>
@@ -167,8 +193,55 @@
         function setAcceptModalId(id) {
             document.getElementById('acceptModalHiddenId').value = id;
         }
+        function setEmptyDate() {
+            document.getElementById('startDate').value = "";
+            document.getElementById('endDate').value = "";
+            $('#dataTable').DataTable().draw();
+        }
+        function setExportModalDate() {
+            var startDate = document.getElementById('startDate').value;
+            var endDate = document.getElementById('endDate').value;
+
+            document.getElementById('startDateHidden').value = startDate;
+            document.getElementById('endDateHidden').value = endDate;
+        }
         $("#exportForm").on("submit", function (e) {
             $('#exportModal').modal('hide');
+        });
+        document.addEventListener('DOMContentLoaded', function () {
+            const startEl = document.querySelector('#startDate');
+            const endEl = document.querySelector('#endDate');
+            const table = $('#dataTable').DataTable();
+
+            $.fn.dataTable.ext.search.push(function (settings, data, dataIndex) {
+                const startDate = startEl.value ? new Date(startEl.value) : null;
+                const endDate = endEl.value ? new Date(endEl.value) : null;
+
+                const rowDate = new Date(table.row(dataIndex).node().querySelector('td[data-date]').getAttribute('data-date'));
+
+                if (startDate) {
+                    startDate.setHours(0, 0, 0, 0);
+                }
+                if (endDate) {
+                    endDate.setHours(23, 59, 59, 999);
+                }
+
+                if (
+                    (!startDate && !endDate) ||
+                    (!startDate && rowDate <= endDate) ||
+                    (startDate <= rowDate && !endDate) ||
+                    (startDate <= rowDate && rowDate <= endDate)
+                ) {
+                    return true;
+                }
+                return false;
+            });
+
+            [startEl, endEl].forEach(input => {
+                input.addEventListener('input', function () {
+                    table.draw();
+                });
+            });
         });
     </script>
 }

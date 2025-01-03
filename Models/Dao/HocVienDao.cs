@@ -17,6 +17,41 @@ namespace Models.Dao
 
         public List<HocVien> DanhSachDuyet() { return db.HocViens.Where(x => x.TrangThaiHV == "Đã duyệt").ToList(); }
 
+        public List<HocVien> DanhSachDuyetTheoNgay(DateTime? startDate, DateTime? endDate)
+        {
+            var danhSach = db.HocViens.AsNoTracking()
+                                      .Join(db.DonDangKies, hocVien => hocVien.MaHV, don => don.MaHV, (hocVien, don) => new { hocVien, don })
+                                      .Where(x => x.hocVien.TrangThaiHV == "Đã duyệt");
+            if (startDate.HasValue)
+            {
+                var start = startDate.Value.Date;
+                danhSach = danhSach.Where(x => x.don.NgayTaoDONDK >= start);
+            }
+            if (endDate.HasValue)
+            {
+                var end = endDate.Value.Date.AddDays(1);
+                danhSach = danhSach.Where(x => x.don.NgayTaoDONDK < end);
+            }
+
+            var result = danhSach.Select(x => new
+            {
+                x.hocVien.MaHV,
+                x.hocVien.TenHV,
+                x.hocVien.SoDienThoaiHV,
+                x.hocVien.EmailHV,
+                x.hocVien.CoSoHV,
+            }).ToList();
+
+            return result.Select(x => new HocVien
+            {
+                MaHV = x.MaHV,
+                TenHV = x.TenHV,
+                SoDienThoaiHV = x.SoDienThoaiHV,
+                EmailHV = x.EmailHV,
+                CoSoHV = x.CoSoHV
+            }).ToList();
+        }
+
         public List<HocVien> DanhSachTheoLop(long id)
         {
             return db.HocViens.AsNoTracking()

@@ -54,14 +54,28 @@ namespace Project.Areas.Admin.Controllers
             return View("Index", dao.DanhSachAll());
         }
 
-        public ActionResult Export(string fileName)
+        public ActionResult Export(string fileName, DateTime? startDate, DateTime? endDate)
         {
             var dao = new HocVienDao();
-            var danhSach = dao.DanhSachDuyet();
+            List<HocVien> danhSach;
+            if (!startDate.HasValue && !endDate.HasValue) { danhSach = dao.DanhSachDuyet(); }
+            else { danhSach = dao.DanhSachDuyetTheoNgay(startDate, endDate); }
+
             if (string.IsNullOrWhiteSpace(fileName)) { fileName = "DanhSachHocVienDaDuyet"; }
 
             using (var workbook = new XLWorkbook())
             {
+                void ApplyStyle(IXLRange range, XLAlignmentHorizontalValues alignment, XLColor bgColor = null, bool bold = false, XLColor fontColor = null, bool italic = false)
+                {
+                    range.Style.Alignment.Horizontal = alignment;
+                    range.Style.Font.Bold = bold;
+                    if (bgColor != null) range.Style.Fill.BackgroundColor = bgColor;
+                    if (fontColor != null) range.Style.Font.FontColor = fontColor;
+                    range.Style.Font.Italic = italic;
+                    range.Style.Border.OutsideBorder = XLBorderStyleValues.Thin;
+                    range.Style.Border.InsideBorder = XLBorderStyleValues.Thin;
+                }
+
                 var worksheet = workbook.Worksheets.Add("Danh sách đã duyệt");
                 worksheet.Cell(1, 1).Value = "Mã học viên";
                 worksheet.Cell(1, 2).Value = "Họ tên";
@@ -70,25 +84,28 @@ namespace Project.Areas.Admin.Controllers
                 worksheet.Cell(1, 5).Value = "Cơ sở";
 
                 var headerRange = worksheet.Range(1, 1, 1, 5);
-                headerRange.Style.Font.Bold = true;
-                headerRange.Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
-                headerRange.Style.Fill.BackgroundColor = XLColor.LightGray;
-                headerRange.Style.Border.OutsideBorder = XLBorderStyleValues.Thin;
-                headerRange.Style.Border.InsideBorder = XLBorderStyleValues.Thin;
+                ApplyStyle(headerRange, XLAlignmentHorizontalValues.Center, XLColor.LightGray, bold: true);
 
-                for (int i = 0; i < danhSach.Count; i++)
+                if (danhSach.Any())
                 {
-                    worksheet.Cell(i + 2, 1).Value = danhSach[i].MaHV;
-                    worksheet.Cell(i + 2, 2).Value = danhSach[i].TenHV;
-                    worksheet.Cell(i + 2, 3).Value = danhSach[i].SoDienThoaiHV;
-                    worksheet.Cell(i + 2, 4).Value = danhSach[i].EmailHV;
-                    worksheet.Cell(i + 2, 5).Value = danhSach[i].CoSoHV;
+                    for (int i = 0; i < danhSach.Count; i++)
+                    {
+                        worksheet.Cell(i + 2, 1).Value = danhSach[i].MaHV;
+                        worksheet.Cell(i + 2, 2).Value = danhSach[i].TenHV;
+                        worksheet.Cell(i + 2, 3).Value = danhSach[i].SoDienThoaiHV;
+                        worksheet.Cell(i + 2, 4).Value = danhSach[i].EmailHV;
+                        worksheet.Cell(i + 2, 5).Value = danhSach[i].CoSoHV;
+                    }
+                    var dataRange = worksheet.Range(2, 1, danhSach.Count + 1, 5);
+                    ApplyStyle(dataRange, XLAlignmentHorizontalValues.Left);
                 }
-
-                var dataRange = worksheet.Range(2, 1, danhSach.Count + 1, 5);
-                dataRange.Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Left;
-                dataRange.Style.Border.OutsideBorder = XLBorderStyleValues.Thin;
-                dataRange.Style.Border.InsideBorder = XLBorderStyleValues.Thin;
+                else
+                {
+                    worksheet.Cell(2, 1).Value = "Không có dữ liệu.";
+                    var noDataRange = worksheet.Range(2, 1, 2, 5);
+                    noDataRange.Merge();
+                    ApplyStyle(noDataRange, XLAlignmentHorizontalValues.Center, fontColor: XLColor.Gray, italic: true);
+                }
 
                 worksheet.Columns().AdjustToContents();
 

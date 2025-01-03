@@ -163,9 +163,6 @@ header {
     font-size: 16px;
 }
 
-    .main-general-form-input::placeholder {
-    }
-
 #optCoso {
     appearance: none;
     -webkit-appearance: none;
